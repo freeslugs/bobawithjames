@@ -85,6 +85,11 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
+    # try:
+    #     import argparse
+    #     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+    # except ImportError:
+    #     flags = None
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
@@ -96,12 +101,15 @@ def get_credentials():
     credentials = store.get()
     print(credentials)
     if not credentials or credentials.invalid:
+    # if True:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
+        from oauth2client import tools
+        flags = tools.argparser.parse_args(args=[])
         if flags:
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatability with Python 2.6
-            credentials = tools.run_flow(flow, store)
+            credentials = tools.run_flow(flow, store, )
         print('Storing credentials to ' + credential_path)
     return credentials
 
