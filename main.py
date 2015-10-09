@@ -1,4 +1,4 @@
-from __future__ import print_function
+# from __future__ import print_function
 import httplib2
 import os
 
@@ -45,7 +45,7 @@ def main():
     service = discovery.build('calendar', 'v3', http=http)
 
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 20 events')
+    # print('Getting the upcoming 20 events')
     eventsResult = service.events().list(
         calendarId='primary', timeMin=now, maxResults=20, singleEvents=True,
         orderBy='startTime').execute()
@@ -66,14 +66,14 @@ def main():
         end = dateutil.parser.parse(end)
         end_time = end.strftime('%I:%M %p')
         end_date = end.strftime("%a %m/%d")
-        print(start, end, event['summary'])
+        # print(start, end, event['summary'])
 
         if (start_time > latest_time):
             return_list.append([latest_time, latest_date, start_time, start_date])
         latest_time = end_time
         latest_date = end_date
 
-    print(return_list)
+    # print(return_list)
     return render_template('index.html', api_data=return_list)
 
 def get_credentials():
@@ -94,13 +94,14 @@ def get_credentials():
 
     store = oauth2client.file.Storage(credential_path)
     credentials = store.get()
+    print(credentials)
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
         if flags:
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatability with Python 2.6
-            credentials = tools.run(flow, store)
+            credentials = tools.run_flow(flow, store)
         print('Storing credentials to ' + credential_path)
     return credentials
 
@@ -109,7 +110,7 @@ def signup():
 	name = request.form['name']
 	email = request.form['email']
 	time = request.form['time']
-	print(name, email, time)
+	# print(name, email, time)
 
 	me = "jamesxue100@gmail.com"
 	you = email
@@ -120,7 +121,7 @@ def signup():
 	msg['To'] = you
 
 	html = open("/Users/jamesxue/Documents/projects/boba/templates/email.html").read()
-	print(html)
+	# print(html)
 
 	part2 = MIMEText(html, 'html')
 
